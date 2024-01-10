@@ -43,11 +43,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     # Proxy
     proxies = None
     if proxy:
-        if proxy.startswith("https"):
-            proxies = {"https": proxy}
-        else:
-            proxies = {"http": proxy}
-
+        proxies = {"https": proxy} if proxy.startswith("https") else {"http": proxy}
     # Fetch
     start = 0
     while start < num_results:
@@ -64,9 +60,9 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             # Find link, title, description
             link = result.find("a", href=True)
             title = result.find("h3")
-            description_box = result.find(
-                "div", {"style": "-webkit-line-clamp:2"})
-            if description_box:
+            if description_box := result.find(
+                "div", {"style": "-webkit-line-clamp:2"}
+            ):
                 description = description_box.text
                 if link and title and description:
                     start += 1
